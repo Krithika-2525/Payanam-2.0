@@ -1,0 +1,3 @@
+import type {Language} from './types';
+export const copy={en:{home:'Discover',planner:'Plan a journey',saved:'Saved journeys',plan:'Plan my journey',build:'Build my itinerary',save:'Save journey',pace:'Your pace',relaxed:'Take it slow',standard:'A little more exploring',rest:'Time to rest',must:'Must-see',optional:'If time allows',skip:'Leave for another day'},ta:{home:'கண்டறிக',planner:'பயணத்தைத் திட்டமிடுக',saved:'சேமித்த பயணங்கள்',plan:'என் பயணத்தைத் திட்டமிடு',build:'பயணத் திட்டத்தை உருவாக்கு',save:'பயணத்தைச் சேமி',pace:'உங்கள் பயண வேகம்',relaxed:'நிதானமான பயணம்',standard:'மேலும் சுற்றிப் பார்க்க',rest:'ஓய்வு நேரம்',must:'கட்டாயம் பார்க்க',optional:'நேரம் இருந்தால்',skip:'வேறொரு நாளில் பார்க்க'}};
+export const t=(language:Language)=>copy[language];
