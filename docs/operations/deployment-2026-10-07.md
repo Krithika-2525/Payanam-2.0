@@ -1,18 +1,33 @@
-# Published guest preview — 7 October 2026
+# Verified hackathon itinerary release — 7 October 2026
 
-- Frontend: https://payanam-journeys.vercel.app
-- API: https://payanam-planning-api.vercel.app/api/v2/capabilities
-- Reviewed source: https://github.com/Krithika-2525/Payanam-2.0/tree/feat/payanam-global
-- Draft PR: https://github.com/Krithika-2525/Payanam-2.0/pull/2 (base `feat/payanam-web`; no merge performed)
-- Source artifact commit: `52f57263688c96e4ac91764fa969c043961d97d4`; local reviewed implementation `222f75d` has matching product source.
-- API deployment: `dpl_42aWwHZhBSpNB4xfSSRKpimchsUL`; frontend: `dpl_NUHAXhpbjEykeyFAMPk6ovb6APZK`. Both READY on existing Vercel projects; reported deployment region `iad1`.
+- App: https://payanam-journeys.vercel.app
+- API capabilities: https://payanam-planning-api.vercel.app/api/v2/capabilities
+- API schema: https://payanam-planning-api.vercel.app/docs
+- Source: https://github.com/Krithika-2525/Payanam-2.0/tree/feat/payanam-global
+- Draft PR: https://github.com/Krithika-2525/Payanam-2.0/pull/2 (base `feat/payanam-web`; no merge performed).
+- Deployed source commit: `8f1051b7176766b350cae7eaf879e1477a866b26`; matching local product tree: `ccc7b9d`. Remote/local tree comparison had no differences before deployment.
+- API: `dpl_6vHmK5xRbmeS3jQQExFe6qNijaSf`; frontend: `dpl_DeQVgwyNwcntwB8TypxwqrdXG7tY`. Both READY on existing projects, canonical public aliases verified, reported region `iad1`. The existing signing secret was preserved. Source-file deployments remain manual.
 
-Public browser evidence: actual India/Madurai and France/Paris results, sourced cards, destination addition, explicit device save, reload/reopen, desktop/mobile layout, no horizontal mobile overflow and no page exceptions. API cross-origin responses permit the canonical frontend. Capabilities report 34,154 cities, `cloud_trips=false`, `place_search=false`; these are intentional while user credentials are deferred.
+## Working public journey
 
-Additional public checks passed: clicking the actual Madurai map marker, JSON export with GeoNames attribution, Tamil preview layout at 360 px, deferred sign-in dialog and keyboard Escape/focus return. GitHub CI initially caught a test-origin mismatch: the legacy CORS test requires port 5173 while the new browser workspace uses 5180. Both explicit test origins are now admitted in CI; production still admits only configured public origins.
+Search a city → explore real nearby hotspots → choose dates, interests, pace and walking/driving → generate timed multi-day visits → inspect day tabs and mapped stops → edit/recalculate → record personal expenses and packing → save/reopen on device → export JSON/calendar or print a guide. Weather failures and deferred private-cloud configuration do not block this guest journey. Routes/distances/times are clearly labelled geometric estimates; source opening hours require confirmation.
 
-Scoped local verification: **63 backend tests, 19 browser tests, successful TypeScript/Vite build**. Real local PostgreSQL/PostGIS ownership, concurrent edits/deletion, response-loss retries, reopened draft association, reorder/date shrink, 51-trip pagination, late account response, OAuth tab handoff and legacy export rights were exercised. The preserved distributed legacy baseline failures are documented separately.
+Production API checks passed for Madurai (35 OSM hotspots, 6/6 packed walking visits across two days), Paris (100 OSM, 6/4 visits) and Tokyo (7 Wikipedia, 5/2 visits). Return times stayed within 18:00. Actual production CORS admits the canonical app origin. Capabilities report `hotspot_discovery=true`, `itinerary_generation=true`, `weather_forecast=true`, `road_routes=false`, `cloud_trips=false`; 34,154 sourced cities.
 
-The compressed city artifact was SHA-256 verified before publishing: `27a02ecfb445491b39ab40bacb4aecc424833711bf56d0ead138f5f188cd2b2e`. An integration payload limit required transferring that artifact in chunks and committing it after the text source; the final branch includes the exact tested binary. Vercel builds include the same artifact; no runtime download or fabricated data fallback.
+Production Chromium exercised Madurai city selection, 35 sourced cards, itinerary generation, ₹3,000 personal budget/₹450 expense, packing checkbox, device save/reload/reopen and calendar download. A subsequent Paris check verified real map tiles/markers/estimated overlay, mobile 360px layout without horizontal overflow, stop removal marking calendar stale and successful recalculation restoring export; no page errors. One manual verification script used an incorrect tab selector after completing the Madurai export; the corrected Paris journey passed. No product defect was found in that selector failure.
 
-No Supabase cloud DB, Auth provider, Geoapify account, Render service, paid upgrade or billed fallback was created. The Render Free blueprint and limited-role Supabase migrations are ready for the owner's later configuration. Existing Vercel preview is personal/noncommercial; it is not a certified commercial free-host profile. Review `zero-bill-deployment.md`, `privacy-and-retention.md` and `release-checklist.md` before connecting cloud data or inviting a public pilot.
+## Verification
+
+Fresh local scoped checks: **87 backend tests, 25 browser tests, successful TypeScript/Vite production build**. Backend tests use real limited-role PostgreSQL 17/PostGIS 3.5; browser private-save checks use cryptographically verified RSA JWT fixtures and the real database. Source-provider transport fixtures cover failures; bundled venues are actual retrieved records, not invented demo attractions. Fresh Astra review found four Important issues; one failing-then-passing regression fix pass covered edit protection, safe import validation, lunch including transit/return, and retained source recalculation. Relaxed pace/repeat-day findings were also fixed. Minor return-summary persistence and cache-only retention limits are documented in `release-checklist.md`.
+
+Deployed source passed both GitHub CI runs:
+- https://github.com/Krithika-2525/Payanam-2.0/actions/runs/37609791343
+- https://github.com/Krithika-2525/Payanam-2.0/actions/runs/37609783943
+
+The unchanged inherited distributed platform is separate: **4 failed, 4 errors, 53 passed, 17 skipped**, recorded in the release checklist. This is not a claim that all inherited distributed services are deployed or green.
+
+## Costs and deferred integrations
+
+No new paid resource, card, hosted inference, billable key or Supabase database was created. Maps, discovery, optimization and forecasts use the chosen no-key path. The dated corpus has **678 records across 12 destinations**, with explicit source links, licenses and retrieval times. Public providers/free-host quotas can limit availability; there is no real-time SLA or automatic polling.
+
+User-selected Supabase DB/Auth remains deferred; tested migrations, private API and browser integration are ready. Render Free blueprint is prepared; the connected account is expired, so no Render service was provisioned. The existing Vercel frontend/Python API provide the working noncommercial hackathon without that dependency. Translation remains browser/language dependent; universal coverage, live traffic, bookings and fares are not claimed. Upstream lacks a LICENSE, so this is a source-available fork without a blanket open-source license grant.

@@ -10,7 +10,10 @@ This release is a personal evaluation preview, not a commercial startup launch. 
 | City discovery | 34,154 licensed GeoNames cities | Snapshot; explicit manual refresh script |
 | Private DB | Tested PostgreSQL/PostGIS migrations and forced RLS | User-selected Supabase project ID deferred |
 | Authentication | Supabase browser SDK and asymmetric JWT verifier | Project URL/public key and provider setup deferred |
-| Detailed places | Server-only Geoapify adapter, durable cache/quota gates | Free key and no-overage qualification deferred |
+| Nearby hotspots | Keyless OSM/Overpass with qualified Wikipedia fallback; 12 dated snapshots | Public service availability/coverage varies |
+| Itinerary | In-process OR-Tools, geometric travel estimates | No API key or LLM required |
+| Weather | Cached dated Open-Meteo forecasts | Free noncommercial forecast horizon only |
+| Optional detailed place search | Server-only Geoapify adapter, durable cache/quota gates | Free key and no-overage qualification deferred |
 | Translation | Browser-local Translator API | Browser/language dependent; no universal coverage claim |
 
 Vercel Hobby is for personal/noncommercial use: https://vercel.com/docs/plans/hobby . An actual commercial frontend should use a currently eligible free host such as Cloudflare Pages after account/terms verification: https://developers.cloudflare.com/pages/platform/limits/ . Do not upgrade to Pro to satisfy this brief.

@@ -1,14 +1,16 @@
 # Payanam — journeys with a little more soul
 
-A complete planning preview for family journeys in Madurai: realistic visit durations, opening sessions, rest time, group transport budgets, saved itineraries, and disruption alternatives.
+A no-key hackathon itinerary planner: search a city, explore real nearby hotspots, choose your pace and interests, and build an editable multi-day journey with timed visits, lunch, mapped stops, weather, notes, budgets and packing.
 
 **Travel with confidence. Keep the moments that matter.**
 
-[Open the live app](https://payanam-journeys.vercel.app) · [Current deployment status](docs/DEPLOYMENT-STATUS.md)
+[Open the live app](https://payanam-journeys.vercel.app) · [Verified deployment](docs/operations/deployment-2026-10-07.md) · [Source review](https://github.com/Krithika-2525/Payanam-2.0/pull/2)
 
-The product frontend is in `frontend/`; its independent API entrypoint is `app.planning.main:app`. [Deployment guide](docs/DEPLOYMENT.md), [Supabase preparation](docs/SUPABASE-INTEGRATION.md), [open-source comparison](docs/startup/OPEN-SOURCE.md), and [startup brief](docs/startup/STARTUP-BRIEF.md).
+The React frontend is in `frontend/`; the standalone FastAPI entrypoint is `app.planning.main:app`. Guest generation, device saves, JSON import/export, calendar and print work without an account or API key. Real OSM/Wikipedia snapshots cover 12 destinations with 678 places; GeoNames search covers 34,154 cities. Other cities use bounded keyless discovery. Source dates, unknown hours and geometric travel estimates are visible; bookings, live fares and traffic are not provided.
 
-This release uses clearly labeled illustrative hours, fares and travel times. It does not book tickets or dispatch transport. Saved journeys are stored in the current browser. Supabase setup is intentionally deferred.
+The Supabase-compatible Postgres/PostGIS backend, private trip editor, JWT verification and owner isolation are implemented and tested on a real local database. Hosted private saves remain deferred until the owner supplies a Supabase target. The current noncommercial hackathon runs on existing Vercel free projects; Render configuration is prepared but no service is provisioned. Start with `.env.travel.example` and [deployment guidance](docs/operations/zero-bill-deployment.md).
+
+[Product, open-source research and scaling choices](docs/startup/HACKATHON-PLANNER-2026-10-07.md) · [Source coverage](docs/providers/hotspot-coverage-2026-10-07.csv). Original upstream has no LICENSE; reviewable source does not grant a license to the entire fork. The older illustrative Madurai planner remains available via `?mode=demo`.
 
 The original engineering prototype remains below and in its existing modules.
 
