@@ -1,3 +1,19 @@
+# Payanam — journeys with a little more soul
+
+A complete planning preview for family journeys in Madurai: realistic visit durations, opening sessions, rest time, group transport budgets, saved itineraries, and disruption alternatives.
+
+**Travel with confidence. Keep the moments that matter.**
+
+[Open the live app](https://payanam-journeys.vercel.app) · [Current deployment status](docs/DEPLOYMENT-STATUS.md)
+
+The product frontend is in `frontend/`; its independent API entrypoint is `app.planning.main:app`. [Deployment guide](docs/DEPLOYMENT.md), [Supabase preparation](docs/SUPABASE-INTEGRATION.md), [open-source comparison](docs/startup/OPEN-SOURCE.md), and [startup brief](docs/startup/STARTUP-BRIEF.md).
+
+This release uses clearly labeled illustrative hours, fares and travel times. It does not book tickets or dispatch transport. Saved journeys are stored in the current browser. Supabase setup is intentionally deferred.
+
+The original engineering prototype remains below and in its existing modules.
+
+---
+
 # Payanam 2.0
 
 Stochastic, multi-modal, state-wide transit routing engine for Tamil Nadu.

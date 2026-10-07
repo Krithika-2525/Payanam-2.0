@@ -1,0 +1,29 @@
+[
+  {
+    "image": "madurai.jpg",
+    "title": "An aerial view of Madurai city from atop of Meenakshi Amman temple.jpg",
+    "author": "எஸ்ஸார்",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:An_aerial_view_of_Madurai_city_from_atop_of_Meenakshi_Amman_temple.jpg",
+    "changes": "Resized and compressed for web; displayed with responsive cropping."
+  },
+  {
+    "image": "palace.jpg",
+    "title": "Madurai Nayak Palace Collage.jpg",
+    "author": "எஸ்ஸார்",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Madurai_Nayak_Palace_Collage.jpg",
+    "changes": "Resized and compressed for web; displayed with responsive cropping."
+  },
+  {
+    "image": "museum.jpg",
+    "title": "Gandhi Memorial Museum.jpg",
+    "author": "Karthikeyan Balasundaram",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "source": "https://commons.wikimedia.org/wiki/File:Gandhi_Memorial_Museum.jpg",
+    "changes": "Resized and compressed for web; displayed with responsive cropping."
+  }
+]

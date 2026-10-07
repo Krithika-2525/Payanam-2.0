@@ -1,0 +1,1 @@
+{"$schema":"https://openapi.vercel.sh/vercel.json","framework":"fastapi","functions":{"app/planning/main.py":{"maxDuration":30}},"regions":["bom1"]}
