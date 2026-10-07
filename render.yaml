@@ -3,15 +3,17 @@ services:
     name: payanam-api
     runtime: python
     plan: free
-    branch: feat/payanam-web
+    branch: feat/payanam-global
     buildCommand: pip install -r requirements-planning.txt
-    startCommand: uvicorn app.planning.main:app --host 0.0.0.0 --port $PORT
+    startCommand: uvicorn app.planning.main:app --host 0.0.0.0 --port $PORT --no-access-log
     healthCheckPath: /health
     envVars:
       - key: PYTHON_VERSION
         value: 3.12.14
       - key: APP_ENV
         value: production
+      - key: PAYANAM_BILLING_MODE
+        value: free_only
       - key: PAYANAM_PLAN_SECRET
         generateValue: true
       - key: PAYANAM_ALLOWED_ORIGINS

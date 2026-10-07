@@ -1,13 +1,25 @@
 name: Planning application checks
 on:
   push:
-    branches: [main, feat/payanam-web]
+    branches: [main, feat/payanam-web, feat/payanam-global]
   pull_request:
 permissions:
   contents: read
 jobs:
   verify:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgis/postgis:17-3.5@sha256:01a6a70e41e6c4467c8f55f6063555ed72db2d6662cd0d571040d42eadaeb6f6
+        env:
+          POSTGRES_PASSWORD: local-test-only
+          POSTGRES_DB: payanam_test
+        ports: ['5432:5432']
+        options: --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PAYANAM_MIGRATION_DATABASE_URL: postgresql+psycopg://postgres:local-test-only@127.0.0.1:5432/payanam_test
+      PAYANAM_TEST_DATABASE_URL: postgresql+psycopg://payanam_runtime:local-runtime-only@127.0.0.1:5432/payanam_test
+      PAYANAM_ALLOWED_ORIGINS: http://127.0.0.1:5180,http://localhost:5180,http://localhost:5173,http://127.0.0.1:5173
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
@@ -21,7 +33,16 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/package-lock.json
       - run: pip install -r requirements-planning.txt pytest==8.3.4 pytest-asyncio==0.25.0 httpx==0.28.1
-      - run: python -m pytest tests/planning -q
+      - name: Migrate disposable database and create limited test login
+        run: |
+          python -m alembic upgrade head
+          python - <<'PY'
+          import psycopg
+          with psycopg.connect('postgresql://postgres:local-test-only@127.0.0.1:5432/payanam_test') as c:
+              c.execute("CREATE ROLE payanam_runtime LOGIN PASSWORD 'local-runtime-only' NOSUPERUSER NOBYPASSRLS")
+              c.execute('GRANT payanam_app TO payanam_runtime')
+          PY
+      - run: python -m pytest tests/planning tests/travel -q
       - run: npm ci
         working-directory: frontend
       - run: npm run build
@@ -30,17 +51,19 @@ jobs:
         working-directory: frontend
       - name: Start API and wait for health
         run: |
-          python -m uvicorn app.planning.main:app --host 127.0.0.1 --port 8000 > /tmp/payanam-api.log 2>&1 &
+          DATABASE_URL="$PAYANAM_TEST_DATABASE_URL" python -m uvicorn app.planning.main:app --host 127.0.0.1 --port 8010 --no-access-log > /tmp/payanam-api.log 2>&1 &
+          DATABASE_URL="$PAYANAM_TEST_DATABASE_URL" python -m uvicorn browser_fixture:app --app-dir tests/travel --host 127.0.0.1 --port 8020 --no-access-log > /tmp/payanam-browser-api.log 2>&1 &
           python - <<'PY'
           import time, urllib.request
           for attempt in range(20):
               try:
-                  urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2)
+                  urllib.request.urlopen('http://127.0.0.1:8010/health', timeout=2)
+                  urllib.request.urlopen('http://127.0.0.1:8020/health', timeout=2)
                   break
               except OSError:
                   time.sleep(1)
           else:
               raise SystemExit('Planning API did not become healthy')
           PY
-      - run: npm test -- --workers=1
+      - run: PAYANAM_BROWSER_DATABASE=1 npm test -- --workers=1
         working-directory: frontend

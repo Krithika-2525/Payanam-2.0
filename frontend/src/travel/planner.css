@@ -1,0 +1,1498 @@
+.planner-page {
+  padding-top: 18px;
+}
+.planner-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 12px;
+  margin: 0 0 18px;
+  padding: 0;
+}
+.planner-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 34px 38px;
+  margin-bottom: 24px;
+  border-radius: 18px;
+  background: #eff6f3;
+  border: 1px solid #dfebe5;
+  overflow: hidden;
+  position: relative;
+}
+.planner-hero h1 {
+  font-size: clamp(32px, 4vw, 48px);
+  margin: 12px 0 14px;
+  letter-spacing: -1.8px;
+}
+.planner-hero p {
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 580px;
+}
+.planner-hero-chips {
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
+  margin-top: 22px;
+  font-size: 11px;
+  color: var(--teal);
+}
+.planner-hero-chips span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.planner-hero-mark {
+  color: #417e6e;
+  width: 180px;
+  flex-shrink: 0;
+  text-align: center;
+  opacity: 0.75;
+  transform: rotate(-6deg);
+}
+.planner-hero-mark svg {
+  width: 100%;
+  height: auto;
+}
+.planner-hero-mark > span {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 5px;
+  margin-top: -5px;
+}
+.planner-preferences {
+  margin: 0;
+  padding: 24px;
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 12px;
+  min-width: 0;
+}
+.preference-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+.preference-heading > svg {
+  color: var(--teal);
+}
+.preference-heading strong {
+  font-size: 15px;
+  font-weight: 600;
+}
+.preference-heading > span {
+  font-size: 10px;
+  color: var(--muted);
+  margin-left: auto;
+}
+.planner-fields {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr 1.4fr 1.1fr 0.7fr 0.7fr;
+  gap: 18px;
+}
+.planner-fields label,
+.planner-tool-card > label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.1px;
+}
+.planner-fields input,
+.planner-fields select,
+.planner-tool-card input,
+.planner-tool-card select {
+  border: 1px solid #dbe2df;
+  background: #fafcfb;
+  border-radius: 7px;
+  color: var(--ink);
+  padding: 11px 10px;
+  width: 100%;
+  min-width: 0;
+  font-size: 12px;
+  font-weight: 400;
+}
+.planner-interest-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  justify-content: space-between;
+  margin-top: 22px;
+}
+.interest-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 770px;
+}
+.interest-chips button {
+  border: 1px solid var(--line);
+  background: white;
+  color: var(--muted);
+  border-radius: 30px;
+  font-size: 10px;
+  padding: 8px 11px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.interest-chips button.active {
+  background: #e8f2ed;
+  color: var(--teal);
+  border-color: #bcd4c8;
+}
+.generate-button {
+  flex-shrink: 0;
+  min-height: 45px;
+  padding-inline: 23px;
+}
+.planner-workspace-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin: 30px 0 20px;
+}
+.planner-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--line);
+  align-self: stretch;
+}
+.planner-tabs button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 14px;
+  border: 0;
+  background: none;
+  border-bottom: 2px solid transparent;
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.planner-tabs button.active {
+  border-bottom-color: var(--teal);
+  color: var(--teal);
+  font-weight: 600;
+}
+.planner-tabs button > span {
+  border-radius: 20px;
+  background: #e8f2ed;
+  padding: 2px 6px;
+  font-size: 10px;
+}
+.planner-save-actions {
+  display: flex;
+  gap: 8px;
+}
+.planner-save-actions .travel-button {
+  font-size: 10px;
+  padding: 9px 12px;
+}
+.planner-trip-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin: 0 0 18px;
+}
+.planner-trip-title > label {
+  display: flex;
+  flex-direction: column;
+  color: var(--muted);
+  gap: 6px;
+  font-size: 9px;
+}
+.planner-trip-title input {
+  width: min(420px, 100%);
+  min-width: 270px;
+  font-size: 17px !important;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  padding: 5px 0;
+  color: var(--ink);
+  background: none;
+  font-weight: 600;
+}
+.planner-portable-actions {
+  display: flex;
+  gap: 18px;
+}
+.planner-portable-actions button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: 0;
+  color: var(--teal);
+  font-size: 10px;
+  padding: 6px 0;
+}
+.planner-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.06fr) minmax(0, 1fr);
+  gap: 22px;
+  align-items: start;
+}
+.planner-board {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  min-width: 0;
+  overflow: hidden;
+}
+.hotspot-toolbar,
+.itinerary-heading {
+  padding: 23px 22px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.hotspot-toolbar h2,
+.itinerary-heading h2 {
+  font-size: 20px;
+}
+.hotspot-toolbar p {
+  color: var(--muted);
+  font-size: 10px;
+  margin-top: 7px;
+}
+.hotspot-toolbar .travel-button {
+  font-size: 9px;
+  white-space: nowrap;
+  padding: 8px 10px;
+}
+.hotspot-search {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  margin: 0 22px 18px;
+  padding: 8px 10px;
+  color: var(--muted);
+}
+.hotspot-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: none;
+  font-size: 11px;
+  outline-offset: 1px;
+}
+.hotspot-search select {
+  max-width: 135px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 10px;
+  padding: 4px;
+  border-left: 1px solid var(--line);
+}
+.hotspot-list {
+  max-height: 820px;
+  overflow: auto;
+  padding: 0 22px;
+}
+.hotspot-card {
+  display: flex;
+  gap: 14px;
+  padding: 19px 0;
+  border-top: 1px solid var(--line);
+  align-items: start;
+}
+.hotspot-card.selected {
+  background: #f0f7f4;
+  box-shadow: 0 0 0 12px #f0f7f4;
+}
+.hotspot-symbol {
+  width: 56px;
+  height: 60px;
+  background: #eaf1e9;
+  color: #40725d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+.hotspot-symbol.category-museum {
+  color: #ae683f;
+  background: #f4e9df;
+}
+.hotspot-symbol.category-temple {
+  color: #af7931;
+  background: #f8efda;
+}
+.hotspot-symbol.category-heritage {
+  color: #847193;
+  background: #eee9f3;
+}
+.hotspot-symbol.category-food {
+  color: #c2604d;
+  background: #faece7;
+}
+.hotspot-symbol.category-viewpoint {
+  color: #3f7690;
+  background: #e7f1f5;
+}
+.hotspot-copy {
+  min-width: 0;
+  flex: 1;
+}
+.hotspot-copy .travel-eyebrow {
+  font-size: 8px;
+  letter-spacing: 1px;
+  line-height: 1.7;
+}
+.hotspot-copy h3 {
+  font-size: 16px;
+  line-height: 1.4;
+  margin: 5px 0;
+}
+.hotspot-copy h3 > button,
+.scheduled-stop h3 > button {
+  font-size: inherit;
+  text-align: left;
+  font-weight: 600;
+  color: var(--ink);
+  border: 0;
+  padding: 0;
+  background: none;
+  line-height: 1.4;
+}
+.hotspot-copy > p {
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.hotspot-facts {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 9px;
+  color: var(--muted);
+  margin: 9px 0;
+}
+.hotspot-facts > span {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.hotspot-links {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 9px;
+}
+.hotspot-links a {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.hotspot-add {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--muted);
+  padding: 9px 5px;
+  border-radius: 8px;
+  width: 61px;
+}
+.hotspot-add small {
+  font-size: 8px;
+}
+.hotspot-add.chosen {
+  color: var(--coral);
+  border-color: #ecc6b7;
+  background: #fff5ed;
+}
+.planner-source-note {
+  font-size: 9px;
+  line-height: 1.7;
+  color: var(--muted);
+  padding: 18px 22px;
+  background: #fafcfb;
+  border-top: 1px solid var(--line);
+}
+.planner-map-panel {
+  position: sticky;
+  top: 16px;
+  min-width: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+.planner-map-panel .journey-map {
+  height: 570px;
+  min-height: 570px;
+  border-radius: 0;
+}
+.planner-map-panel .map-canvas {
+  height: 100%;
+  min-height: 0;
+}
+.planner-map-note {
+  display: flex;
+  gap: 11px;
+  align-items: flex-start;
+  background: #fff;
+  padding: 18px 19px;
+  color: var(--teal);
+  border-top: 1px solid var(--line);
+}
+.planner-map-note strong {
+  font-size: 12px;
+  font-weight: 600;
+}
+.planner-map-note p {
+  font-size: 10px;
+  line-height: 1.7;
+  color: var(--muted);
+  margin-top: 5px;
+}
+.planner-map-note svg {
+  flex-shrink: 0;
+}
+.optional-routing {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--muted);
+  background: #fafcfb;
+  font-size: 10px;
+  border: 0;
+  border-top: 1px solid var(--line);
+  padding: 13px 19px;
+}
+.route-message {
+  padding: 10px 19px;
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.planner-day-tabs {
+  display: flex;
+  gap: 7px;
+  overflow: auto;
+  padding: 0 22px 20px;
+}
+.planner-day-tabs button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  min-width: 67px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  padding: 10px 12px;
+  color: var(--muted);
+}
+.planner-day-tabs small {
+  font-size: 8px;
+  letter-spacing: 1px;
+}
+.planner-day-tabs strong {
+  font-size: 12px;
+  font-weight: 500;
+}
+.planner-day-tabs .active {
+  color: white;
+  background: var(--teal);
+  border-color: var(--teal);
+}
+.planner-weather {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 22px 16px;
+  border: 1px solid #e8dcbf;
+  border-radius: 8px;
+  background: #fffbf0;
+  padding: 13px 14px;
+  color: #886128;
+}
+.planner-weather > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.planner-weather strong {
+  font-size: 12px;
+}
+.planner-weather span {
+  font-size: 9px;
+}
+.planner-weather > a {
+  font-size: 9px;
+  margin-left: auto;
+}
+.planner-weather-missing {
+  padding: 0 22px 15px;
+  font-size: 9px;
+  color: var(--muted);
+}
+.planner-stale {
+  margin: 0 22px 14px;
+  padding: 12px;
+  border: 1px solid #ecc6b7;
+  border-radius: 7px;
+  background: #fff5ed;
+  color: #934423;
+  font-size: 11px;
+  line-height: 1.7;
+}
+.day-summary {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 0 22px 18px;
+  color: var(--muted);
+  font-size: 9px;
+}
+.day-summary span {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.planner-timeline {
+  padding: 0 22px 20px;
+}
+.timeline-origin {
+  display: flex;
+  gap: 14px;
+  align-items: start;
+  padding: 12px 0;
+}
+.timeline-origin > span {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  border: 2px solid var(--teal);
+  border-radius: 50%;
+  margin: 3px 0 0 5px;
+}
+.timeline-origin strong {
+  font-size: 11px;
+  color: var(--teal);
+}
+.timeline-origin p {
+  font-size: 9px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-top: 6px;
+}
+.travel-connector {
+  font-size: 9px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-left: 9px;
+  padding: 15px 0 15px 16px;
+  border-left: 1px dashed #bdceca;
+}
+.scheduled-stop {
+  display: flex;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-left: 4px;
+}
+.scheduled-stop.selected {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 2px #dfebe5;
+}
+.schedule-time {
+  width: 64px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  background: #f6f9f7;
+  padding: 20px 4px;
+  border-right: 1px solid var(--line);
+}
+.schedule-time strong {
+  font-size: 14px;
+  color: var(--teal);
+}
+.schedule-time small {
+  font-size: 8px;
+  color: var(--muted);
+}
+.scheduled-stop-main {
+  flex: 1;
+  min-width: 0;
+  padding: 16px;
+}
+.stop-top {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: start;
+}
+.stop-top h3 {
+  font-size: 17px;
+  margin-top: 5px;
+}
+.stop-top .travel-eyebrow {
+  font-size: 8px;
+}
+.stop-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0;
+  font-size: 9px;
+  color: var(--muted);
+}
+.stop-details span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.mapped-hours {
+  font-size: 9px;
+  color: var(--muted);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+  margin-bottom: 9px !important;
+}
+.scheduled-stop textarea {
+  width: 100%;
+  min-height: 44px;
+  resize: vertical;
+  font-size: 10px !important;
+  border: 1px solid #e7ece9;
+  background: #fbfcfb;
+  border-radius: 5px;
+  padding: 9px;
+  color: var(--ink);
+  line-height: 1.6;
+}
+.stop-controls {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 9px;
+  margin-top: 10px;
+  color: var(--muted);
+}
+.stop-controls label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.stop-controls select {
+  font-size: 9px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #fff;
+  color: var(--ink);
+  padding: 5px;
+}
+.stop-controls button {
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: white;
+  color: var(--muted);
+  padding: 5px;
+  display: flex;
+}
+.stop-controls a {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+  white-space: nowrap;
+}
+.lunch-block {
+  padding: 14px 17px;
+  margin: 14px 0 4px 4px;
+  border: 1px dashed #ddc5a1;
+  background: #fffcf5;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.lunch-block > span {
+  font-size: 9px;
+  color: #967344;
+}
+.lunch-block strong {
+  font-size: 12px;
+  font-weight: 500;
+  color: #806136;
+}
+.lunch-block p {
+  font-size: 9px;
+  color: var(--muted);
+}
+.timeline-origin.return {
+  padding-top: 22px;
+}
+.route-actions {
+  display: flex;
+  gap: 10px;
+  padding: 0 22px 23px;
+}
+.route-actions .travel-button {
+  font-size: 10px;
+  padding: 9px 12px;
+}
+.itinerary-heading .travel-button {
+  font-size: 9px;
+  padding: 8px;
+}
+.planner-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  min-height: 240px;
+  justify-content: center;
+  text-align: center;
+  padding: 35px 20px;
+  color: var(--muted);
+}
+.planner-loading h3 {
+  color: var(--ink);
+}
+.planner-loading p {
+  line-height: 1.7;
+  font-size: 12px;
+  max-width: 400px;
+}
+.planner-assumptions {
+  border: 1px solid var(--line);
+  background: #fafcfb;
+  border-radius: 9px;
+  margin: 23px 0 0;
+  padding: 17px 20px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.8;
+}
+.planner-assumptions summary {
+  cursor: pointer;
+  color: var(--teal);
+  font-weight: 500;
+}
+.planner-assumptions p {
+  font-size: 9px;
+  margin-top: 12px;
+}
+.trip-tools {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 22px;
+}
+.planner-tool-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 26px;
+  min-width: 0;
+  background: #fff;
+}
+.planner-tool-card h2 {
+  font-size: 22px;
+  margin: 12px 0;
+}
+.planner-tool-card > p {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.8;
+  margin-bottom: 23px;
+}
+.planner-tool-card > label {
+  max-width: 220px;
+  font-size: 11px;
+}
+.budget-summary {
+  display: flex;
+  gap: 30px;
+  background: #f0f7f3;
+  border-radius: 9px;
+  padding: 21px;
+  margin: 20px 0 12px;
+}
+.budget-summary > div {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.budget-summary small {
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: var(--muted);
+}
+.budget-summary strong {
+  color: var(--teal);
+  font-size: 23px;
+  font-weight: 500;
+}
+.planner-tool-card progress {
+  width: 100%;
+  height: 5px;
+  accent-color: var(--teal);
+  margin-bottom: 20px;
+}
+.expense-form {
+  display: grid;
+  grid-template-columns: 1fr 110px;
+  gap: 10px;
+  margin-top: 20px;
+}
+.expense-form input:first-child {
+  grid-column: 1/-1;
+}
+.expense-form .travel-button {
+  font-size: 10px;
+  padding: 10px;
+}
+.expense-list {
+  margin-top: 24px;
+}
+.expense-list > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-top: 1px solid var(--line);
+  padding: 14px 0;
+}
+.expense-list > div > span {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+.expense-list strong {
+  font-size: 12px;
+  font-weight: 500;
+}
+.expense-list small {
+  font-size: 9px;
+  color: var(--muted);
+}
+.expense-list b {
+  font-size: 13px;
+  color: var(--teal);
+  font-weight: 500;
+}
+.expense-list > p {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.packing-list > div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-top: 1px solid var(--line);
+  padding: 11px 0;
+}
+.packing-list label {
+  flex: 1;
+  display: flex;
+  gap: 11px;
+  align-items: center;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.packing-list input {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--teal);
+  flex-shrink: 0;
+}
+.packing-list input:checked + span {
+  color: var(--muted);
+  text-decoration: line-through;
+}
+.planner-tool-card > form:not(.expense-form) {
+  display: flex;
+  gap: 8px;
+  margin: 22px 0;
+}
+.planner-tool-card > form:not(.expense-form) > input {
+  flex: 1;
+  min-width: 0;
+}
+.planner-tool-card > form:not(.expense-form) > .travel-button {
+  font-size: 10px;
+  white-space: nowrap;
+}
+.planner-tool-card > small {
+  font-size: 9px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+.city-preview {
+  border: 1px solid #dce9e2;
+  background: #f4f9f6;
+  border-radius: 12px;
+  padding: 22px 25px;
+  margin-top: 24px;
+}
+.city-preview-title {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.city-preview-title > svg {
+  color: var(--teal);
+  flex-shrink: 0;
+}
+.city-preview-title > div {
+  flex: 1;
+}
+.city-preview-title h2 {
+  font-size: 22px;
+  margin-top: 5px;
+}
+.city-preview-title p {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-top: 6px;
+}
+.city-preview-title > .travel-button {
+  font-size: 11px;
+}
+.city-preview-places {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+.city-preview-places button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #d8e7de;
+  border-radius: 25px;
+  background: #fff;
+  padding: 9px 12px;
+  color: var(--teal);
+  font-size: 10px;
+}
+.planner-mobile-view,
+.planner-print-only {
+  display: none;
+}
+.destination-card-bottom {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.destination-card-bottom > a {
+  margin-right: auto;
+}
+@media (max-width: 1100px) {
+  .planner-fields {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .planner-workspace-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .planner-save-actions {
+    align-self: flex-end;
+  }
+  .planner-tabs {
+    align-self: stretch;
+  }
+  .planner-interest-row {
+    align-items: flex-end;
+  }
+  .planner-hero-mark {
+    width: 140px;
+  }
+  .planner-portable-actions {
+    gap: 10px;
+  }
+  .planner-map-panel .journey-map {
+    height: 520px;
+    min-height: 520px;
+  }
+}
+@media (max-width: 760px) {
+  .planner-hero {
+    padding: 25px;
+    align-items: start;
+  }
+  .planner-hero-mark {
+    display: none;
+  }
+  .planner-hero-chips {
+    gap: 13px;
+    font-size: 9px;
+  }
+  .planner-preferences {
+    padding: 20px;
+  }
+  .preference-heading > span {
+    display: none;
+  }
+  .planner-fields {
+    gap: 14px;
+  }
+  .planner-grid {
+    grid-template-columns: 1fr;
+  }
+  .planner-map-panel {
+    position: relative;
+    display: none;
+  }
+  .planner-grid.show-map .planner-map-panel {
+    display: block;
+  }
+  .planner-grid.show-map .planner-board {
+    display: none;
+  }
+  .planner-mobile-view {
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
+    margin-bottom: 14px;
+  }
+  .planner-mobile-view button {
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    background: white;
+    color: var(--muted);
+    font-size: 11px;
+    padding: 7px 15px;
+  }
+  .planner-mobile-view button[aria-pressed="true"] {
+    background: var(--teal);
+    border-color: var(--teal);
+    color: #fff;
+  }
+  .planner-interest-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
+  }
+  .generate-button {
+    align-self: flex-end;
+  }
+  .planner-trip-title {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .planner-portable-actions {
+    justify-content: space-between;
+  }
+  .trip-tools {
+    grid-template-columns: 1fr;
+  }
+  .city-preview-title {
+    flex-wrap: wrap;
+  }
+  .city-preview-title > .travel-button {
+    margin-left: 38px;
+  }
+  .planner-map-panel .journey-map {
+    height: 450px;
+    min-height: 450px;
+  }
+  .hotspot-list {
+    max-height: 650px;
+  }
+}
+@media (max-width: 480px) {
+  .planner-page {
+    padding-top: 7px;
+  }
+  .planner-hero {
+    padding: 23px 20px;
+    margin-bottom: 18px;
+    border-radius: 12px;
+  }
+  .planner-hero h1 {
+    font-size: 32px;
+    letter-spacing: -1px;
+  }
+  .planner-hero p {
+    font-size: 11px;
+  }
+  .planner-hero-chips {
+    gap: 10px;
+  }
+  .planner-hero-chips span:last-child {
+    display: none;
+  }
+  .planner-preferences {
+    padding: 18px 15px;
+  }
+  .preference-heading {
+    margin-bottom: 18px;
+  }
+  .preference-heading strong {
+    font-size: 13px;
+  }
+  .planner-fields {
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 10px;
+  }
+  .planner-fields input,
+  .planner-fields select {
+    font-size: 11px;
+    padding: 10px 7px;
+  }
+  .planner-fields label {
+    font-size: 9px;
+  }
+  .interest-chips {
+    gap: 6px;
+  }
+  .interest-chips button {
+    font-size: 9px;
+    padding: 7px 9px;
+  }
+  .generate-button {
+    width: 100%;
+    font-size: 12px !important;
+  }
+  .planner-workspace-heading {
+    margin: 20px 0 18px;
+    gap: 12px;
+  }
+  .planner-tabs {
+    gap: 0;
+  }
+  .planner-tabs button {
+    font-size: 10px;
+    gap: 5px;
+    padding: 12px 8px;
+    white-space: normal;
+  }
+  .planner-tabs button > svg {
+    width: 14px;
+    flex-shrink: 0;
+  }
+  .planner-tabs button > span {
+    display: none;
+  }
+  .planner-save-actions {
+    width: 100%;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .planner-save-actions .travel-button {
+    font-size: 9px;
+    padding: 10px 9px;
+    flex: 1;
+  }
+  .planner-trip-title input {
+    min-width: 0;
+    width: 100%;
+    font-size: 15px !important;
+  }
+  .planner-portable-actions {
+    gap: 8px;
+  }
+  .planner-portable-actions button {
+    font-size: 8px;
+    gap: 4px;
+  }
+  .planner-portable-actions svg {
+    width: 12px;
+  }
+  .hotspot-toolbar,
+  .itinerary-heading {
+    padding: 20px 14px 16px;
+    gap: 8px;
+  }
+  .hotspot-toolbar h2,
+  .itinerary-heading h2 {
+    font-size: 17px;
+  }
+  .hotspot-toolbar p {
+    font-size: 8px;
+  }
+  .hotspot-toolbar .travel-button,
+  .itinerary-heading .travel-button {
+    font-size: 8px;
+    padding: 8px;
+    white-space: normal;
+    flex-shrink: 0;
+    max-width: 90px;
+  }
+  .hotspot-search {
+    margin: 0 14px 15px;
+    padding: 8px;
+  }
+  .hotspot-search input {
+    font-size: 10px;
+  }
+  .hotspot-search select {
+    font-size: 8px;
+    max-width: 105px;
+  }
+  .hotspot-list {
+    padding: 0 14px;
+    max-height: none;
+  }
+  .hotspot-card {
+    gap: 10px;
+    padding: 17px 0;
+  }
+  .hotspot-symbol {
+    width: 39px;
+    height: 46px;
+    border-radius: 7px;
+  }
+  .hotspot-symbol svg {
+    width: 19px;
+  }
+  .hotspot-copy h3 {
+    font-size: 14px;
+  }
+  .hotspot-copy .travel-eyebrow {
+    font-size: 7px;
+    letter-spacing: 0.5px;
+  }
+  .hotspot-copy > p {
+    font-size: 9px;
+  }
+  .hotspot-add {
+    width: 47px;
+    padding: 8px 3px;
+  }
+  .hotspot-add small {
+    font-size: 7px;
+  }
+  .hotspot-facts {
+    font-size: 8px;
+    margin: 7px 0;
+    gap: 5px;
+  }
+  .hotspot-links {
+    gap: 9px;
+    font-size: 8px;
+  }
+  .planner-source-note {
+    padding: 15px;
+    font-size: 8px;
+  }
+  .planner-day-tabs {
+    padding: 0 14px 17px;
+  }
+  .planner-day-tabs button {
+    min-width: 60px;
+    padding: 9px;
+  }
+  .planner-weather {
+    margin: 0 14px 14px;
+    padding: 10px;
+  }
+  .planner-weather span {
+    font-size: 8px;
+  }
+  .planner-weather > svg {
+    width: 18px;
+  }
+  .planner-stale {
+    margin: 0 14px 14px;
+    font-size: 10px;
+  }
+  .planner-weather-missing {
+    padding: 0 14px 14px;
+    font-size: 8px;
+  }
+  .day-summary {
+    padding: 0 14px 15px;
+    font-size: 8px;
+    gap: 8px;
+  }
+  .planner-timeline {
+    padding: 0 14px 18px;
+  }
+  .scheduled-stop-main {
+    padding: 12px;
+  }
+  .schedule-time {
+    width: 48px;
+    padding: 17px 3px;
+  }
+  .schedule-time strong {
+    font-size: 12px;
+  }
+  .schedule-time small {
+    font-size: 6px;
+  }
+  .stop-top h3 {
+    font-size: 15px;
+    overflow-wrap: anywhere;
+  }
+  .stop-top .travel-eyebrow {
+    font-size: 7px;
+  }
+  .stop-details {
+    font-size: 8px;
+    gap: 5px;
+  }
+  .scheduled-stop textarea {
+    font-size: 9px !important;
+  }
+  .stop-controls {
+    font-size: 8px;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .stop-controls select {
+    font-size: 8px;
+  }
+  .stop-controls button {
+    padding: 4px;
+  }
+  .stop-controls a {
+    font-size: 8px;
+  }
+  .planner-assumptions {
+    padding: 14px;
+    font-size: 10px;
+  }
+  .route-actions {
+    padding: 0 14px 18px;
+    gap: 8px;
+  }
+  .route-actions .travel-button {
+    font-size: 9px;
+    padding: 9px;
+  }
+  .planner-tool-card {
+    padding: 20px 16px;
+  }
+  .planner-tool-card h2 {
+    font-size: 20px;
+  }
+  .planner-tool-card > p {
+    font-size: 10px;
+  }
+  .planner-tool-card .travel-eyebrow {
+    font-size: 9px;
+  }
+  .budget-summary {
+    padding: 17px;
+    gap: 24px;
+  }
+  .budget-summary strong {
+    font-size: 21px;
+  }
+  .packing-list label {
+    font-size: 11px;
+  }
+  .planner-tool-card > form:not(.expense-form) > .travel-button {
+    padding: 10px;
+    font-size: 9px;
+  }
+  .city-preview {
+    padding: 18px 16px;
+  }
+  .city-preview-title h2 {
+    font-size: 19px;
+  }
+  .city-preview-title p {
+    font-size: 10px;
+  }
+  .city-preview-title .travel-eyebrow {
+    font-size: 8px;
+  }
+  .city-preview-title > .travel-button {
+    margin-left: 0;
+    width: 100%;
+    font-size: 10px;
+  }
+  .city-preview-places {
+    gap: 7px;
+  }
+  .city-preview-places button {
+    font-size: 9px;
+    padding: 8px 10px;
+  }
+  .destination-card-bottom > a {
+    flex-basis: 100%;
+  }
+  .planner-save-actions,
+  .planner-portable-actions,
+  .stop-controls,
+  .hotspot-toolbar,
+  .preference-heading {
+    min-width: 0;
+  }
+}
+@media print {
+  .travel-header,
+  .travel-footer,
+  .skip-link,
+  .planner-page > *:not(.planner-print-only),
+  .travel-alert,
+  .travel-notice,
+  .locale-preview {
+    display: none !important;
+  }
+  .travel-main {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+  .planner-print-only {
+    display: block !important;
+    color: #111;
+  }
+  .planner-print-only > h2 {
+    font-size: 26px;
+  }
+  .planner-print-only > p {
+    margin: 10px 0;
+  }
+  .planner-print-only section {
+    break-inside: avoid;
+    border-top: 1px solid #bbb;
+    padding: 15px 0;
+  }
+  .planner-print-only section h3 {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+  .planner-print-only section p {
+    font-size: 11px;
+    line-height: 1.8;
+    margin: 12px 0;
+  }
+  .travel-shell {
+    background: white;
+    font-size: 12px;
+  }
+}
+
+.planner-tools-lock {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}

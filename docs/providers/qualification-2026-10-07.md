@@ -1,0 +1,9 @@
+# Source qualification — 7 October 2026
+
+GeoNames `cities15000.zip` is the shipped source: https://download.geonames.org/export/dump/cities15000.zip . Licensing/field specification: https://download.geonames.org/export/dump/readme.txt (CC BY 4.0). Snapshot contains 34,154 real cities, original names, aliases, country, coordinates and IANA timezones. Retrieval timestamp is stored in the compressed artifact and each API record. Refresh with `python scripts/update_cities.py`; refresh is explicit, not claimed to be a continuous live feed.
+
+The adjacent 30-query CSV records India, Tamil/native names, international disambiguation, Arabic/Japanese aliases and a rural gap. Dhanushkodi has no result: this city-size dataset is not comprehensive village/attraction coverage. Paris resolves to different source IDs/coordinates when France versus US is selected. Known geographic ranges for Madurai/Paris/Tokyo were checked; an independent licensed geometry-level global audit has not been performed. No venue hours, route times, fares, availability, accessibility or booking facts are returned.
+
+OpenFreeMap supplies real map tiles/style without an API key. MapLibre rendering is independent of city discovery; blocked tiles or unavailable WebGL leave the list usable. Geoapify is an implemented but unqualified/disabled venue source until the user provides a free account/key and zero-billing controls. Its cached facts retain source IDs/retrieval time and unknown fields stay null. Browser native translation is optional and not an open-source universal translation service.
+
+Original upstream code has no blanket license grant. This fork is source-available for evaluation; do not claim the whole repository is open-source or copy AGPL TREK code into it without resolving licensing. Legacy illustrative records have unqualified source export rights and are omitted from v2 exports with a note; original v1 files remain unchanged on the traveler's device.

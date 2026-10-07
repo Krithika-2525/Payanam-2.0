@@ -2,6 +2,7 @@
 import asyncio
 import os
 import threading
+from uuid import uuid4
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager
 from urllib.parse import urlparse
@@ -13,6 +14,11 @@ from starlette.responses import JSONResponse
 from .catalog import DATASET_VERSION, catalog
 from .models import PlanRequest, PlanResult, ReplanRequest
 from .solver import replan, solve_plan
+from app.travel.config import Settings
+from app.travel.service import TravelServices
+from app.travel.api import router as travel_router
+from app.travel.errors import TravelError
+from sqlalchemy.exc import SQLAlchemyError
 
 
 @asynccontextmanager
@@ -21,8 +27,12 @@ async def lifespan(app):
         raise RuntimeError('Set PAYANAM_PLAN_SECRET to a generated secret of at least 32 characters.')
     app.state.executor = ThreadPoolExecutor(max_workers=2, thread_name_prefix='payanam-solver')
     app.state.capacity = threading.BoundedSemaphore(2)
-    yield
-    app.state.executor.shutdown(wait=True, cancel_futures=True)
+    app.state.travel = TravelServices(Settings.from_env())
+    try:
+        yield
+    finally:
+        await app.state.travel.close()
+        app.state.executor.shutdown(wait=True, cancel_futures=True)
 
 
 class BodyLimit:
@@ -66,11 +76,36 @@ def allowed_origins():
     return origins
 
 
-app = FastAPI(title='Payanam Journey Planning', version='1.0.0',
-              description='Family-paced itinerary planning using illustrative Madurai data. No bookings.', lifespan=lifespan)
+app = FastAPI(title='Payanam Journeys', version='2.0.0',
+              description='Real worldwide city discovery and private trips. V1 is an illustrative Madurai planner. No bookings.', lifespan=lifespan)
 app.add_middleware(BodyLimit)
 app.add_middleware(CORSMiddleware, allow_origins=allowed_origins(), allow_credentials=False,
-                   allow_methods=['GET', 'POST'], allow_headers=['Content-Type'])
+                   allow_methods=['GET', 'POST', 'PATCH', 'DELETE'],
+                   allow_headers=['Content-Type','Authorization','Idempotency-Key','If-Match'],
+                   expose_headers=['ETag','Retry-After'])
+app.include_router(travel_router)
+
+
+@app.middleware('http')
+async def travel_headers(request,call_next):
+    request.state.request_id=str(uuid4())
+    response=await call_next(request)
+    if request.url.path.startswith('/api/v2'):
+        response.headers['Cache-Control']='no-store'
+        response.headers['X-Request-ID']=request.state.request_id
+    return response
+
+
+@app.exception_handler(TravelError)
+async def travel_error(request,exc):
+    return JSONResponse({'code':exc.code,'message':exc.message,'request_id':request.state.request_id,'retryable':exc.retryable},
+                        status_code=exc.status,headers={'Retry-After':'60'} if exc.status==429 else None)
+
+
+@app.exception_handler(SQLAlchemyError)
+async def database_error(request,exc):
+    return JSONResponse({'code':'database_unavailable','message':'Cloud saves are temporarily unavailable. Keep your draft and retry.',
+                         'request_id':request.state.request_id,'retryable':True},status_code=503)
 
 
 @app.get('/health')
