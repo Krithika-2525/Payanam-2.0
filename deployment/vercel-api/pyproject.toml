@@ -1,8 +1,8 @@
 [project]
 name = "payanam-planning"
-version = "1.0.0"
+version = "2.0.0"
 requires-python = ">=3.12,<3.13"
-dependencies = ["fastapi==0.115.6", "uvicorn==0.34.0", "pydantic==2.10.4", "ortools==9.15.6755"]
+dependencies = ["fastapi==0.115.6", "uvicorn==0.34.0", "pydantic==2.10.4", "ortools==9.15.6755", "SQLAlchemy==2.1.3", "alembic==1.20.0", "psycopg[binary]==3.3.6", "PyJWT[crypto]==2.15.1", "pycountry==26.2.16", "httpx==0.28.1"]
 
 [tool.vercel]
 entrypoint = "app.planning.main:app"

@@ -1,0 +1,34 @@
+{
+  "reviewed_at": "2026-10-07",
+  "billing_mode": "free_only",
+  "sources": [
+    {
+      "id": "geonames",
+      "source": "https://download.geonames.org/export/dump/cities15000.zip",
+      "terms_url": "https://download.geonames.org/export/dump/readme.txt",
+      "license_id": "CC-BY-4.0",
+      "attribution_text": "GeoNames, CC BY 4.0",
+      "commercial_allowed": true,
+      "export_allowed": true,
+      "offline_allowed": true,
+      "refresh": "explicit manual snapshot update; not live venue data"
+    },
+    {
+      "id": "openfreemap",
+      "terms_url": "https://openfreemap.org/",
+      "attribution_text": "OpenMapTiles \u00b7 OpenStreetMap contributors",
+      "commercial_allowed": true,
+      "sla": false
+    },
+    {
+      "id": "geoapify",
+      "terms_url": "https://www.geoapify.com/terms-and-conditions/",
+      "license_id": "ODbL-1.0",
+      "attribution_text": "\u00a9 OpenStreetMap contributors \u00b7 Powered by Geoapify",
+      "commercial_allowed": true,
+      "enabled": false,
+      "account_zero_billing_verification_required": true,
+      "credit_cap": 2400
+    }
+  ]
+}

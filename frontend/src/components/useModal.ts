@@ -5,7 +5,7 @@ export function useModal(open:boolean,busy:boolean,close:()=>void){
  useEffect(()=>{
   if(!open)return;
   const previous=document.activeElement instanceof HTMLElement?document.activeElement:null;
-  const backgrounds=Array.from(document.querySelectorAll<HTMLElement>('.sidebar,.main-shell'));
+  const backgrounds=Array.from(document.querySelectorAll<HTMLElement>('.sidebar,.main-shell,.travel-header,.travel-main,.travel-footer'));
   const previousInert=backgrounds.map(e=>e.inert);backgrounds.forEach(e=>{e.inert=true});
   ref.current?.querySelector<HTMLButtonElement>('button')?.focus();
   const keyboard=(event:KeyboardEvent)=>{

@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 test("plan, save, reload and compare a delayed journey using the real API", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/?mode=demo");
   await page
     .getByRole("button", { name: "Plan my journey", exact: true })
     .click();
@@ -48,7 +48,7 @@ test("plan, save, reload and compare a delayed journey using the real API", asyn
 test("API failure preserves preferences and never fabricates a plan", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/?mode=demo");
   await page
     .getByRole("button", { name: "Plan my journey", exact: true })
     .click();
@@ -65,7 +65,7 @@ test("mobile planning fits the viewport and remains accessible", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/");
+  await page.goto("/?mode=demo");
   await page
     .getByRole("button", { name: "Plan my journey", exact: true })
     .click();
@@ -87,7 +87,7 @@ test("mobile planning fits the viewport and remains accessible", async ({
 test("invalid import is rejected without corrupting saved journeys", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/?mode=demo");
   await page
     .getByRole("button", { name: /Saved journeys/ })
     .first()
@@ -101,9 +101,9 @@ test("invalid import is rejected without corrupting saved journeys", async ({
 });
 
 test("import rejects a fabricated successful itinerary", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/?mode=demo");
   const response = await page.request.post(
-    "http://127.0.0.1:8000/api/v1/plans/preview",
+    "http://127.0.0.1:8010/api/v1/plans/preview",
     { data: { date: "2026-10-12" } },
   );
   const plan = await response.json();
@@ -128,7 +128,7 @@ test("import rejects a fabricated successful itinerary", async ({ page }) => {
 test("delay dialog contains focus and restores it on Escape", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/?mode=demo");
   await page
     .getByRole("button", { name: "Plan my journey", exact: true })
     .click();
@@ -158,7 +158,7 @@ test("homepage search carries traveler choices into the real itinerary", async (
   page,
 }) => {
   test.setTimeout(12000);
-  await page.goto("/");
+  await page.goto("/?mode=demo");
   await expect(
     page.getByRole("heading", { name: "Your next great day starts here." }),
   ).toBeVisible({ timeout: 2000 });
@@ -192,7 +192,7 @@ test("journey filters and heritage preset select the intended places", async ({
   page,
 }) => {
   test.setTimeout(12000);
-  await page.goto("/");
+  await page.goto("/?mode=demo");
   await page
     .getByRole("button", { name: "Art & history", exact: true })
     .click({ timeout: 2000 });
@@ -218,7 +218,7 @@ test("Tamil navigation fits a narrow mobile screen on every page", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 360, height: 800 });
-  await page.goto("/");
+  await page.goto("/?mode=demo");
   await page
     .getByRole("button", { name: "Switch Tamil place names and navigation" })
     .click();

@@ -1,0 +1,18 @@
+{
+  "discover": "Discover",
+  "trips": "My trips",
+  "translator": "Translator",
+  "search": "Search cities",
+  "signIn": "Sign in",
+  "new": "New trip",
+  "add": "Add to trip",
+  "title": "Trip title",
+  "start": "Start date",
+  "end": "End date",
+  "timezone": "Timezone",
+  "currency": "Currency",
+  "save": "Keep draft on this device",
+  "cloud": "Save to cloud",
+  "map": "Map",
+  "list": "List"
+}
