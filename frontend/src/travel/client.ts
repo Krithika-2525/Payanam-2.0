@@ -13,6 +13,7 @@ export type Capabilities = {
   supabase_publishable_key: string;
   map_style: string;
   live_traffic: boolean;
+  road_routes?: boolean;
 };
 const env = (import.meta as unknown as { env: Record<string, string> }).env;
 export const base = (
@@ -112,8 +113,11 @@ export const findPlaces = (
       }),
     { signal },
   );
-export const getTrips = (token: string,cursor?:string|null) =>
-  request<{ trips: Trip[];next_cursor:string|null }>("/trips"+(cursor?'?cursor='+encodeURIComponent(cursor):''), { token });
+export const getTrips = (token: string, cursor?: string | null) =>
+  request<{ trips: Trip[]; next_cursor: string | null }>(
+    "/trips" + (cursor ? "?cursor=" + encodeURIComponent(cursor) : ""),
+    { token },
+  );
 export const getTrip = (id: string, token: string) =>
   request<Trip>("/trips/" + id, { token });
 export const createTrip = (metadata: Metadata, token: string, key: string) =>

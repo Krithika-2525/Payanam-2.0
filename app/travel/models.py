@@ -37,6 +37,60 @@ class ResolvedPlace(StrictModel):
     source_url: str | None = None
     license: str = 'ODbL-1.0'
     attribution: str = '© OpenStreetMap contributors · Powered by Geoapify'
+    category: str | None = Field(default=None, max_length=40)
+    opening_hours: str | None = Field(default=None, max_length=500)
+    website: str | None = Field(default=None, max_length=1000)
+    wikipedia: str | None = Field(default=None, max_length=400)
+    wheelchair: str | None = Field(default=None, max_length=40)
+    fee: str | None = Field(default=None, max_length=40)
+    description: str | None = Field(default=None, max_length=1000)
+    distance_m: int | None = Field(default=None, ge=0)
+    recommended_duration_minutes: int | None = Field(default=None, ge=10, le=240)
+
+
+class PlannedVisit(StrictModel):
+    place_id: UUID
+    day_index: int = Field(ge=0, le=29)
+    position: int = Field(ge=0, le=199)
+    arrival: str = Field(pattern=r'^([01]\d|2[0-3]):[0-5]\d$')
+    departure: str = Field(pattern=r'^([01]\d|2[0-3]):[0-5]\d$')
+    travel_minutes: int = Field(ge=0, le=1440)
+    distance_m: int = Field(ge=0, le=1000000)
+    duration_minutes: int = Field(ge=10, le=240)
+    hours_status: Literal['mapped', 'unverified', 'unknown']
+
+
+class Expense(StrictModel):
+    id: str = Field(min_length=1, max_length=100)
+    label: str = Field(min_length=1, max_length=120)
+    amount: float = Field(ge=0, le=10000000)
+    category: Literal['transport', 'stay', 'food', 'activities', 'other'] = 'other'
+
+
+class PackingItem(StrictModel):
+    id: str = Field(min_length=1, max_length=100)
+    label: str = Field(min_length=1, max_length=120)
+    done: bool = False
+
+
+class PlanningState(StrictModel):
+    city_id: UUID
+    mode: Literal['walk', 'drive'] = 'drive'
+    pace: Literal['relaxed', 'balanced', 'packed'] = 'balanced'
+    interests: list[Literal['attraction','museum','heritage','temple','nature','viewpoint','food']] = Field(default_factory=list, max_length=7)
+    day_start: str = Field(default='09:00', pattern=r'^([01]\d|2[0-3]):[0-5]\d$')
+    day_end: str = Field(default='18:00', pattern=r'^([01]\d|2[0-3]):[0-5]\d$')
+    visits: list[PlannedVisit] = Field(default_factory=list, max_length=100)
+    expenses: list[Expense] = Field(default_factory=list, max_length=50)
+    checklist: list[PackingItem] = Field(default_factory=list, max_length=50)
+    budget: float = Field(default=0, ge=0, le=10000000)
+    stale: bool = False
+
+    @model_validator(mode='after')
+    def bounded_envelope(self):
+        if len(self.model_dump_json().encode()) > 30000:
+            raise ValueError('Export older planning details before adding more.')
+        return self
 
 
 class TripCreate(StrictModel):
@@ -45,6 +99,7 @@ class TripCreate(StrictModel):
     end_date: date
     timezone: str = 'Asia/Kolkata'
     currency: str = 'INR'
+    planning: PlanningState | None = None
 
     @field_validator('timezone')
     @classmethod

@@ -9,10 +9,14 @@ export default function TravelMap({
   places,
   selected,
   onSelect,
+  routeCoordinates,
+  roadRoute = false,
 }: {
   places: Place[];
   selected: string | null;
   onSelect: (id: string) => void;
+  routeCoordinates?: number[][];
+  roadRoute?: boolean;
 }) {
   const container = useRef<HTMLDivElement>(null),
     map = useRef<maplibregl.Map | null>(null),
@@ -77,7 +81,7 @@ export default function TravelMap({
     if (places.length)
       map.current.fitBounds(bounds, {
         padding: 75,
-        maxZoom: 10,
+        maxZoom: 14,
         duration: matchMedia("(prefers-reduced-motion: reduce)").matches
           ? 0
           : 600,
@@ -89,6 +93,40 @@ export default function TravelMap({
       m.getElement().classList.toggle("selected", places[i]?.id === selected),
     );
   }, [selected, ready, places]);
+  useEffect(() => {
+    const value = map.current;
+    if (!ready || !value) return;
+    const source = value.getSource("journey-route") as
+      | maplibregl.GeoJSONSource
+      | undefined;
+    const data = {
+      type: "Feature" as const,
+      properties: {},
+      geometry: {
+        type: "LineString" as const,
+        coordinates: routeCoordinates || [],
+      },
+    };
+    if (source) source.setData(data);
+    else {
+      value.addSource("journey-route", { type: "geojson", data });
+      value.addLayer({
+        id: "journey-route",
+        type: "line",
+        source: "journey-route",
+        paint: {
+          "line-color": "#1e625e",
+          "line-width": 3,
+          "line-dasharray": [2, 2],
+        },
+      });
+    }
+    value.setPaintProperty(
+      "journey-route",
+      "line-dasharray",
+      roadRoute ? [1, 0] : [2, 2],
+    );
+  }, [ready, routeCoordinates, roadRoute]);
   return (
     <div className="journey-map">
       <div
@@ -103,7 +141,11 @@ export default function TravelMap({
         </div>
       )}
       <div className="map-caption">
-        Real world map · route times are not calculated
+        {routeCoordinates
+          ? roadRoute
+            ? "Road route · no live traffic"
+            : "Estimated links · check directions before travelling"
+          : "Real places · © OpenStreetMap contributors"}
       </div>
     </div>
   );

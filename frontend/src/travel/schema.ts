@@ -21,6 +21,74 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v2/cities/{city_id}/hotspots": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Hotspots */
+        get: operations["hotspots_api_v2_cities__city_id__hotspots_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/cities/{city_id}/weather": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Weather */
+        get: operations["weather_api_v2_cities__city_id__weather_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/itineraries/generate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Itinerary */
+        post: operations["itinerary_api_v2_itineraries_generate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/itineraries/route": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Route */
+        post: operations["route_api_v2_itineraries_route_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v2/places/search": {
         parameters: {
             query?: never;
@@ -216,15 +284,160 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** DayPlan */
+        DayPlan: {
+            /** Day Index */
+            day_index: number;
+            /**
+             * Date
+             * Format: date
+             */
+            date: string;
+            /** Stops */
+            stops: components["schemas"]["ScheduledStop"][];
+            /** Distance M */
+            distance_m: number;
+            /** Travel Minutes */
+            travel_minutes: number;
+            /** Return Minutes */
+            return_minutes: number;
+            /** Return At */
+            return_at: string;
+            /** Lunch Start */
+            lunch_start?: string | null;
+            /** Lunch End */
+            lunch_end?: string | null;
+            /** Theme */
+            theme: string;
+        };
+        /** Expense */
+        Expense: {
+            /** Id */
+            id: string;
+            /** Label */
+            label: string;
+            /** Amount */
+            amount: number;
+            /**
+             * Category
+             * @default other
+             * @enum {string}
+             */
+            category: "transport" | "stay" | "food" | "activities" | "other";
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
         };
+        /** HotspotResult */
+        HotspotResult: {
+            city: components["schemas"]["ResolvedPlace"];
+            /** Places */
+            places: components["schemas"]["ResolvedPlace"][];
+            /**
+             * Source
+             * @default openstreetmap
+             */
+            source: string;
+            /**
+             * Retrieved At
+             * Format: date-time
+             */
+            retrieved_at: string;
+            /**
+             * Cached
+             * @default false
+             */
+            cached: boolean;
+            /**
+             * Stale
+             * @default false
+             */
+            stale: boolean;
+            /** Message */
+            message: string;
+        };
+        /** ItineraryPlan */
+        ItineraryPlan: {
+            city: components["schemas"]["ResolvedPlace"];
+            preferences: components["schemas"]["ItineraryRequest"];
+            /** Days */
+            days: components["schemas"]["DayPlan"][];
+            /** Warnings */
+            warnings: string[];
+            /**
+             * Algorithm
+             * @default OR-Tools time-window route optimization
+             */
+            algorithm: string;
+            /** Attributions */
+            attributions: string[];
+        };
+        /** ItineraryRequest */
+        ItineraryRequest: {
+            /**
+             * City Id
+             * Format: uuid
+             */
+            city_id: string;
+            /**
+             * Start Date
+             * Format: date
+             */
+            start_date: string;
+            /**
+             * Days
+             * @default 3
+             */
+            days: number;
+            /** Interests */
+            interests?: ("attraction" | "museum" | "heritage" | "temple" | "nature" | "viewpoint" | "food")[];
+            /**
+             * Pace
+             * @default balanced
+             * @enum {string}
+             */
+            pace: "relaxed" | "balanced" | "packed";
+            /**
+             * Mode
+             * @default drive
+             * @enum {string}
+             */
+            mode: "walk" | "drive";
+            /**
+             * Day Start
+             * @default 09:00
+             */
+            day_start: string;
+            /**
+             * Day End
+             * @default 18:00
+             */
+            day_end: string;
+            /** Must Visit */
+            must_visit?: string[];
+            /** Exclude */
+            exclude?: string[];
+            /** Fixed Order */
+            fixed_order?: string[][] | null;
+        };
         /** LegacyRequest */
         LegacyRequest: {
             /** Original */
             original: string;
+        };
+        /** PackingItem */
+        PackingItem: {
+            /** Id */
+            id: string;
+            /** Label */
+            label: string;
+            /**
+             * Done
+             * @default false
+             */
+            done: boolean;
         };
         /** PlaceSearchResult */
         PlaceSearchResult: {
@@ -353,6 +566,81 @@ export interface components {
              */
             signature: string;
         };
+        /** PlannedVisit */
+        PlannedVisit: {
+            /**
+             * Place Id
+             * Format: uuid
+             */
+            place_id: string;
+            /** Day Index */
+            day_index: number;
+            /** Position */
+            position: number;
+            /** Arrival */
+            arrival: string;
+            /** Departure */
+            departure: string;
+            /** Travel Minutes */
+            travel_minutes: number;
+            /** Distance M */
+            distance_m: number;
+            /** Duration Minutes */
+            duration_minutes: number;
+            /**
+             * Hours Status
+             * @enum {string}
+             */
+            hours_status: "mapped" | "unverified" | "unknown";
+        };
+        /** PlanningState */
+        PlanningState: {
+            /**
+             * City Id
+             * Format: uuid
+             */
+            city_id: string;
+            /**
+             * Mode
+             * @default drive
+             * @enum {string}
+             */
+            mode: "walk" | "drive";
+            /**
+             * Pace
+             * @default balanced
+             * @enum {string}
+             */
+            pace: "relaxed" | "balanced" | "packed";
+            /** Interests */
+            interests?: ("attraction" | "museum" | "heritage" | "temple" | "nature" | "viewpoint" | "food")[];
+            /**
+             * Day Start
+             * @default 09:00
+             */
+            day_start: string;
+            /**
+             * Day End
+             * @default 18:00
+             */
+            day_end: string;
+            /** Visits */
+            visits?: components["schemas"]["PlannedVisit"][];
+            /** Expenses */
+            expenses?: components["schemas"]["Expense"][];
+            /** Checklist */
+            checklist?: components["schemas"]["PackingItem"][];
+            /**
+             * Budget
+             * @default 0
+             */
+            budget: number;
+            /**
+             * Stale
+             * @default false
+             */
+            stale: boolean;
+        };
         /** ReplanRequest */
         ReplanRequest: {
             original_plan: components["schemas"]["PlanResult"];
@@ -420,6 +708,67 @@ export interface components {
              * @default © OpenStreetMap contributors · Powered by Geoapify
              */
             attribution: string;
+            /** Category */
+            category?: string | null;
+            /** Opening Hours */
+            opening_hours?: string | null;
+            /** Website */
+            website?: string | null;
+            /** Wikipedia */
+            wikipedia?: string | null;
+            /** Wheelchair */
+            wheelchair?: string | null;
+            /** Fee */
+            fee?: string | null;
+            /** Description */
+            description?: string | null;
+            /** Distance M */
+            distance_m?: number | null;
+            /** Recommended Duration Minutes */
+            recommended_duration_minutes?: number | null;
+        };
+        /** RouteRequest */
+        RouteRequest: {
+            /**
+             * City Id
+             * Format: uuid
+             */
+            city_id: string;
+            /** Place Ids */
+            place_ids: string[];
+            /**
+             * Mode
+             * @default drive
+             * @enum {string}
+             */
+            mode: "walk" | "drive";
+        };
+        /** ScheduledStop */
+        ScheduledStop: {
+            place: components["schemas"]["ResolvedPlace"];
+            /** Arrival */
+            arrival: string;
+            /** Departure */
+            departure: string;
+            /** Duration Minutes */
+            duration_minutes: number;
+            /** Travel Minutes */
+            travel_minutes: number;
+            /** Distance M */
+            distance_m: number;
+            /**
+             * Travel Source
+             * @default estimate
+             * @constant
+             */
+            travel_source: "estimate";
+            /**
+             * Hours Status
+             * @enum {string}
+             */
+            hours_status: "mapped" | "unverified" | "unknown";
+            /** Reason */
+            reason: string;
         };
         /** Stop */
         Stop: {
@@ -498,6 +847,7 @@ export interface components {
              * @default INR
              */
             currency: string;
+            planning?: components["schemas"]["PlanningState"] | null;
         };
         /** TripDocument */
         TripDocument: {
@@ -523,6 +873,7 @@ export interface components {
              * @default INR
              */
             currency: string;
+            planning?: components["schemas"]["PlanningState"] | null;
             /**
              * Schema Version
              * @default 2
@@ -606,6 +957,136 @@ export interface operations {
                 };
                 content: {
                     "application/json": unknown;
+                };
+            };
+        };
+    };
+    hotspots_api_v2_cities__city_id__hotspots_get: {
+        parameters: {
+            query?: {
+                refresh?: boolean;
+            };
+            header?: never;
+            path: {
+                city_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HotspotResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    weather_api_v2_cities__city_id__weather_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                city_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    itinerary_api_v2_itineraries_generate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ItineraryRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItineraryPlan"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    route_api_v2_itineraries_route_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RouteRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

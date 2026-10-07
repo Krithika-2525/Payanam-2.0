@@ -399,3 +399,132 @@ test("signed JWT saves survive response loss and reload; other account cannot ac
   expect(payload.export_note).toContain("unqualified");
   expect(JSON.stringify(payload)).not.toContain(tokens.b.token);
 });
+
+test("generated itinerary uses the real private backend with schedule, expenses and packing", async ({
+  page,
+  context,
+  request,
+}) => {
+  test.setTimeout(90000);
+  test.skip(
+    !process.env.PAYANAM_BROWSER_DATABASE,
+    "Needs signed JWT fixture and real Postgres",
+  );
+  const tokens = JSON.parse(
+    readFileSync("/tmp/payanam-browser-tokens.json", "utf8"),
+  );
+  await context.route("http://127.0.0.1:8010/**", async (route) =>
+    route.fulfill({
+      response: await route.fetch({
+        url: route.request().url().replace(":8010", ":8020"),
+      }),
+    }),
+  );
+  await context.route("https://identity.example/auth/v1/**", (route) =>
+    route.fulfill({
+      json: {
+        access_token: tokens.a.token,
+        refresh_token: "test-refresh",
+        expires_in: 3600,
+        token_type: "bearer",
+        user: {
+          id: tokens.a.id,
+          aud: "authenticated",
+          role: "authenticated",
+          email: "a@example.test",
+          app_metadata: { provider: "email" },
+          user_metadata: {},
+          created_at: new Date().toISOString(),
+        },
+      },
+    }),
+  );
+  await page.goto("/");
+  await page.getByLabel("Search destinations").fill("Madurai");
+  await page
+    .getByRole("button", { name: "Search cities", exact: true })
+    .click();
+  await page
+    .getByTestId("place-card")
+    .first()
+    .getByRole("button", { name: "Explore & plan" })
+    .click();
+  await page.getByLabel("Number of days").selectOption("1");
+  await page
+    .getByRole("button", { name: "Generate itinerary", exact: true })
+    .click();
+  await expect(page.getByTestId("scheduled-stop").first()).toBeVisible();
+  const title = "Private itinerary " + Date.now();
+  await page.getByLabel("Trip title").fill(title);
+  await page
+    .getByRole("button", { name: "Budget & packing", exact: true })
+    .click();
+  await page.getByLabel("Expense description").fill("Train ticket");
+  await page.getByLabel("Expense amount").fill("450");
+  await page.getByRole("button", { name: "Add expense", exact: true }).click();
+  await page.getByLabel("Water bottle", { exact: true }).check();
+  await page
+    .getByRole("button", { name: "Save to cloud", exact: true })
+    .click();
+  await page.getByLabel("Email", { exact: true }).fill("a@example.test");
+  await page.getByLabel("Password", { exact: true }).fill("test-password");
+  await page
+    .getByRole("button", { name: "Sign in to your account", exact: true })
+    .click();
+  await expect(
+    page.getByRole("button", { name: "Sign out", exact: true }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Save to cloud", exact: true })
+    .click();
+  await expect(
+    page.getByText("Trip saved privately to your account."),
+  ).toBeVisible();
+  const result = await request.get("http://127.0.0.1:8020/api/v2/trips", {
+    headers: { Authorization: "Bearer " + tokens.a.token },
+  });
+  const trip = (await result.json()).trips.find(
+    (t: { title: string }) => t.title === title,
+  );
+  expect(trip.planning.visits.length).toBe(trip.items.length);
+  expect(trip.planning.expenses[0].amount).toBe(450);
+  expect(
+    trip.planning.checklist.find(
+      (c: { label: string }) => c.label === "Water bottle",
+    ).done,
+  ).toBeTruthy();
+  expect(
+    trip.items.every(
+      (i: { place: { provider: string } }) =>
+        i.place.provider === "openstreetmap",
+    ),
+  ).toBeTruthy();
+  await page.getByRole("button", { name: "My trips", exact: true }).click();
+  await page
+    .getByText(title, { exact: true })
+    .locator("..")
+    .getByRole("button", { name: "Open trip", exact: true })
+    .click();
+  await expect(page.getByTestId("scheduled-stop").first()).toBeVisible();
+  await page
+    .getByRole("button", { name: "Budget & packing", exact: true })
+    .click();
+  await expect(page.getByText("Train ticket", { exact: true })).toBeVisible();
+  expect(
+    (
+      await request.get("http://127.0.0.1:8020/api/v2/trips/" + trip.id, {
+        headers: { Authorization: "Bearer " + tokens.b.token },
+      })
+    ).status(),
+  ).toBe(404);
+  expect(
+    (
+      await request.delete("http://127.0.0.1:8020/api/v2/trips/" + trip.id, {
+        headers: {
+          Authorization: "Bearer " + tokens.a.token,
+          "If-Match": '"' + trip.version + '"',
+        },
+      })
+    ).status(),
+  ).toBe(204);
+});

@@ -3,6 +3,7 @@ import hashlib
 import json
 import threading
 import time
+import os
 
 import httpx
 from starlette.concurrency import run_in_threadpool
@@ -16,6 +17,8 @@ from .models import ResolvedPlace
 from .providers.cities import CityProvider
 from .providers.geoapify import GeoapifyProvider
 from .repository import TripRepository
+from .providers.hotspots import HotspotProvider
+from .providers.weather import WeatherProvider
 
 
 class TravelServices:
@@ -29,6 +32,8 @@ class TravelServices:
         self.identity=IdentityVerifier(settings.auth_issuer,settings.auth_audience)
         self.http=httpx.AsyncClient(timeout=5,follow_redirects=False)
         self.geoapify=GeoapifyProvider(settings.geoapify_key,self.http)
+        self.hotspots=HotspotProvider(self.http)
+        self.weather=WeatherProvider(self.http)
 
     def repository(self):
         if self.repo is None:self.connect_database()
@@ -55,8 +60,10 @@ class TravelServices:
                 'map_style':'https://tiles.openfreemap.org/styles/liberty',
                 'supabase_url':self.settings.supabase_url,'supabase_publishable_key':self.settings.supabase_publishable_key,
                 'live_traffic':False,'live_transport':False,
+                'hotspot_discovery':True,'itinerary_generation':True,'weather_forecast':True,
+                'road_routes':bool(os.getenv('OPENROUTESERVICE_API_KEY') and os.getenv('ORS_ZERO_BILLING_CONFIRMED')=='true'),
                 'attributions':['GeoNames · CC BY 4.0','OpenMapTiles · © OpenStreetMap contributors'],
-                'message':'City results are a real GeoNames snapshot. Venue hours, prices and transport availability are not provided.'}
+                'message':'Real city and OSM attraction data with source dates. Mapped hours need confirmation; travel is estimated, with no live fares or traffic.'}
 
     async def search(self,query,source,bucket):
         cached=False
@@ -88,6 +95,8 @@ class TravelServices:
     def resolve(self,id):
         city=self.cities.resolve(id)
         if city:return city
+        hotspot=self.hotspots.resolve(id)
+        if hotspot:return hotspot
         return self.repo.place(id) if self.repo else None
 
     async def close(self):

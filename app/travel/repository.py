@@ -31,7 +31,7 @@ class TripRepository:
         row=c.execute(text('select * from travel.trips where id=:id'+(' for update' if lock else '')),{'id':trip_id}).mappings().first()
         if row is None:raise TravelError('not_found','This trip is unavailable.',404)
         items=c.execute(text('select * from travel.trip_items where trip_id=:id order by day_index,position,id'),{'id':trip_id}).mappings()
-        return TripDocument(**{k:row[k] for k in ['id','title','start_date','end_date','timezone','currency','version','origin','created_at','updated_at']},
+        return TripDocument(**{k:row[k] for k in ['id','title','start_date','end_date','timezone','currency','planning','version','origin','created_at','updated_at']},
             items=[TripItem(id=i['id'],day_index=i['day_index'],position=i['position'],notes=i['notes'],place=ResolvedPlace.model_validate(i['place'])) for i in items])
 
     def get(self,actor,trip_id):
@@ -83,9 +83,9 @@ class TripRepository:
             digest,previous=self._dedupe(c,actor,'create',key,data.model_dump_json())
             if previous:return previous
             id=uuid4()
-            c.execute(text('insert into travel.trips(id,owner_id,title,start_date,end_date,timezone,currency) '
-                           'values(:id,:owner,:title,:start_date,:end_date,:timezone,:currency)'),
-                      {'id':id,'owner':actor.id,**data.model_dump()})
+            c.execute(text('insert into travel.trips(id,owner_id,title,start_date,end_date,timezone,currency,planning) '
+                           'values(:id,:owner,:title,:start_date,:end_date,:timezone,:currency,cast(:planning as jsonb))'),
+                      {'id':id,'owner':actor.id,**data.model_dump(), 'planning':data.planning.model_dump_json() if data.planning else None})
             self._days(c,id,data)
             trip=self._document(c,id)
             self._record(c,actor,'create',key,digest,trip,json.dumps({'kind':'create'}))
@@ -102,8 +102,8 @@ class TripRepository:
                 d=change.metadata
                 if any(i.day_index>(d.end_date-d.start_date).days for i in trip.items):
                     raise TravelError('invalid_days','Move visits before shortening this trip.',422)
-                c.execute(text('update travel.trips set title=:title,start_date=:start_date,end_date=:end_date,timezone=:timezone,currency=:currency where id=:id'),
-                          {'id':trip_id,**d.model_dump()})
+                c.execute(text('update travel.trips set title=:title,start_date=:start_date,end_date=:end_date,timezone=:timezone,currency=:currency,planning=cast(:planning as jsonb) where id=:id'),
+                          {'id':trip_id,**d.model_dump(), 'planning':d.planning.model_dump_json() if d.planning else None})
                 self._days(c,trip_id,d)
             elif change.kind=='add_item':
                 if len(trip.items)>=200:raise TravelError('item_limit','This trip supports up to 200 places.',422)

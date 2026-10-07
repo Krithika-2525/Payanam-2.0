@@ -50,6 +50,7 @@ import {
   newDraft,
   persistDraft,
   removeDraft,
+  validDraft,
   type Draft,
 } from "./drafts";
 import Translator from "./Translator";
@@ -60,8 +61,17 @@ import { prepareChanges, type SaveStep } from "./savePlan";
 import { preserveOAuthDraft, restoreOAuthDraft } from "./oauthDraft";
 import { AccountScope } from "./accountScope";
 import { useModal } from "../components/useModal";
+import CityExplorer from "./CityExplorer";
+import JourneyPlanner from "./JourneyPlanner";
+import { markChanged } from "./planner";
 const TravelMap = lazy(() => import("./TravelMap"));
-type View = "discover" | "editor" | "trips" | "translator" | "about";
+type View =
+  | "discover"
+  | "editor"
+  | "trips"
+  | "translator"
+  | "about"
+  | "planner";
 type SaveJournal = {
   target: Draft;
   trip: Trip | null;
@@ -144,6 +154,7 @@ function metadataValid(d: Draft) {
 }
 
 export default function TravelApp() {
+  const [plannerCity, setPlannerCity] = useState<Place | null>(null);
   const [view, setView] = useState<View>("discover"),
     [cap, setCap] = useState<Capabilities | null>(null),
     [query, setQuery] = useState(""),
@@ -179,7 +190,7 @@ export default function TravelApp() {
     const restored = restoreOAuthDraft();
     if (restored) {
       setDraft(restored);
-      setView("editor");
+      setView(restored.metadata.planning ? "planner" : "editor");
       setNotice(
         "Your draft was restored after sign-in. Choose Save to cloud to upload it.",
       );
@@ -329,7 +340,7 @@ export default function TravelApp() {
       place,
       notes: "",
     };
-    setDraft({ ...next, items: [...next.items, item] });
+    setDraft(markChanged(next, [...next.items, item]));
     setDay(target);
     go("editor");
   }
@@ -353,10 +364,21 @@ export default function TravelApp() {
   }
   function editMetadata(key: string, value: string) {
     if (!draft || journal.current) return;
-    setDraft({ ...draft, metadata: { ...draft.metadata, [key]: value } });
+    setDraft({
+      ...draft,
+      metadata: {
+        ...draft.metadata,
+        [key]: value,
+        planning:
+          draft.metadata.planning &&
+          ["start_date", "end_date", "timezone"].includes(key)
+            ? { ...draft.metadata.planning, stale: true }
+            : draft.metadata.planning,
+      },
+    });
   }
   function modifyItems(items: Item[]) {
-    if (draft && !journal.current) setDraft({ ...draft, items });
+    if (draft && !journal.current) setDraft(markChanged(draft, items));
   }
   function move(item: Item, destination: number, position?: number) {
     if (!draft) return;
@@ -571,10 +593,45 @@ export default function TravelApp() {
       setBusy(false);
     }
   }
+  async function importTrip(file: File) {
+    if (busy || journal.current) return;
+    if (file.size > 2_000_000) {
+      setError("Choose a Payanam trip export smaller than 2 MB.");
+      return;
+    }
+    try {
+      const envelope = JSON.parse(await file.text());
+      if (
+        envelope.kind !== "payanam-draft" ||
+        envelope.version !== 2 ||
+        !validDraft(envelope.draft)
+      )
+        throw new Error("Choose a valid Payanam version 2 draft export.");
+      const source = envelope.draft as Draft;
+      const copy: Draft = {
+        id: crypto.randomUUID(),
+        metadata: structuredClone(source.metadata),
+        items: source.items.map((i) => ({
+          ...structuredClone(i),
+          id: crypto.randomUUID(),
+        })),
+        updated_at: new Date().toISOString(),
+      };
+      setDraft(copy);
+      setPlannerCity(null);
+      setDay(0);
+      go(copy.metadata.planning ? "planner" : "editor");
+      setNotice(
+        "Trip opened as a new local copy. Choose Save to keep it; cloud ownership was not imported.",
+      );
+    } catch (e) {
+      setError((e as Error).message);
+    }
+  }
   function exportDraft() {
     if (!draft) return;
     const allowed = draft.items.filter((i) =>
-      ["CC-BY-4.0", "ODbL-1.0"].includes(i.place.license),
+      ["CC-BY-4.0", "ODbL-1.0", "CC-BY-SA-4.0"].includes(i.place.license),
     );
     download(
       {
@@ -874,7 +931,13 @@ export default function TravelApp() {
                     >
                       <button
                         className="place-main"
-                        onClick={() => setSelected(p.id)}
+                        onClick={() => {
+                          setSelected(p.id);
+                          if (p.kind === "city") {
+                            setPlannerCity(p);
+                            go("planner");
+                          }
+                        }}
                         aria-label={"Show " + p.name + " on map"}
                       >
                         <span className="place-number">
@@ -905,6 +968,17 @@ export default function TravelApp() {
                         >
                           {p.attribution}
                         </a>
+                        {p.kind === "city" && (
+                          <button
+                            className="travel-button small primary"
+                            onClick={() => {
+                              setPlannerCity(p);
+                              go("planner");
+                            }}
+                          >
+                            Explore &amp; plan <ArrowRight size={14} />
+                          </button>
+                        )}
                         <button
                           className="travel-button small secondary"
                           onClick={() => addPlace(p)}
@@ -940,6 +1014,15 @@ export default function TravelApp() {
                 </Suspense>
               </div>
             </div>
+            {places.find((p) => p.id === selected)?.kind === "city" && (
+              <CityExplorer
+                city={places.find((p) => p.id === selected)!}
+                onPlan={() => {
+                  setPlannerCity(places.find((p) => p.id === selected)!);
+                  go("planner");
+                }}
+              />
+            )}
             <div className="travel-value-row">
               <div>
                 <span>01</span>
@@ -967,6 +1050,34 @@ export default function TravelApp() {
               </div>
             </div>
           </>
+        )}
+        {view === "planner" && (
+          <JourneyPlanner
+            key={
+              (plannerCity?.id ||
+                draft?.metadata.planning?.city_id ||
+                "planner") +
+              ":" +
+              (session?.user.id || "guest")
+            }
+            city={plannerCity}
+            draft={draft}
+            roadEnabled={cap?.road_routes}
+            busy={busy || !!journal.current}
+            onChange={(next) => {
+              if (journal.current) return;
+              if (
+                next.cloud_owner &&
+                next.cloud_owner !== accountScope.current.capture().identity
+              )
+                return;
+              setDraft(next);
+            }}
+            onBack={() => go("discover")}
+            onKeep={keepDraft}
+            onCloud={() => void saveCloud()}
+            onExport={exportDraft}
+          />
         )}
         {view === "editor" && draft && (
           <>
@@ -1324,6 +1435,21 @@ export default function TravelApp() {
                 On this device <span>{local.length}</span>
               </h2>
               <label className="travel-button secondary compact">
+                <Upload size={14} /> Open a shared / exported trip
+                <input
+                  type="file"
+                  accept="application/json,.json"
+                  aria-label="Import trip JSON"
+                  disabled={busy || !!journal.current}
+                  style={{ maxWidth: 180 }}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) void importTrip(file);
+                    e.target.value = "";
+                  }}
+                />
+              </label>
+              <label className="travel-button secondary compact">
                 <Upload size={14} />
                 Import illustrative v1 export
                 <input
@@ -1364,8 +1490,9 @@ export default function TravelApp() {
                         onClick={() => {
                           journal.current = null;
                           setDraft(structuredClone(d));
+                          setPlannerCity(null);
                           setDay(0);
-                          go("editor");
+                          go(d.metadata.planning ? "planner" : "editor");
                         }}
                       >
                         Open trip
@@ -1452,7 +1579,8 @@ export default function TravelApp() {
                                 cloud_owner: session?.user.id,
                               });
                               setDay(0);
-                              go("editor");
+                              setPlannerCity(null);
+                              go(trip.planning ? "planner" : "editor");
                             }}
                           >
                             Open trip

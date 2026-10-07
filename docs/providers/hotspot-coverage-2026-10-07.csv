@@ -1,0 +1,13 @@
+city,country,source,places,mapped_hours,retrieved_at,source_url
+Madurai,IN,openstreetmap,35,2,2026-10-07T10:26:07.215103+00:00,https://gall.openstreetmap.de/api/interpreter
+Delhi,IN,openstreetmap,100,12,2026-10-07T09:59:23.794472+00:00,https://overpass-api.de/api/interpreter
+Bangkok,TH,openstreetmap,100,18,2026-10-07T10:01:00.720041+00:00,https://overpass-api.de/api/interpreter
+Paris,FR,openstreetmap,100,44,2026-10-07T10:22:55.766999+00:00,https://gall.openstreetmap.de/api/interpreter
+Mumbai,IN,openstreetmap,13,3,2026-10-07T10:16:28.730105+00:00,https://overpass-api.de/api/interpreter
+London,GB,openstreetmap,100,35,2026-10-07T10:17:20.910595+00:00,https://overpass-api.de/api/interpreter
+Chennai,IN,openstreetmap,100,8,2026-10-07T10:26:20.199942+00:00,https://gall.openstreetmap.de/api/interpreter
+Tokyo,JP,wikipedia,7,0,2026-10-07T10:30:30.162108+00:00,https://en.wikipedia.org/w/api.php
+Jaipur,IN,wikipedia,30,0,2026-10-07T10:30:31.700844+00:00,https://en.wikipedia.org/w/api.php
+Bengaluru,IN,wikipedia,28,0,2026-10-07T10:30:33.104927+00:00,https://en.wikipedia.org/w/api.php
+Kochi,IN,wikipedia,29,0,2026-10-07T10:30:34.414390+00:00,https://en.wikipedia.org/w/api.php
+Singapore,SG,wikipedia,36,0,2026-10-07T10:30:35.767545+00:00,https://en.wikipedia.org/w/api.php

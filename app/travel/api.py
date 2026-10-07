@@ -5,10 +5,15 @@ from uuid import UUID
 from fastapi import APIRouter,Depends,Header,Query,Request,Response
 from fastapi.security import HTTPBearer,HTTPAuthorizationCredentials
 from starlette.concurrency import run_in_threadpool
+from sqlalchemy.exc import SQLAlchemyError
 
 from .errors import TravelError
 from .models import Actor,PlaceQuery,PlaceSearchResult,TripCreate,TripChange,TripDocument,ResolvedPlace
 from .legacy import LegacyRequest,decode_legacy
+from .itinerary_models import ItineraryRequest,ItineraryPlan
+from .itinerary import generate_itinerary
+from .providers.hotspots import HotspotResult,distance
+from .providers.routes import RouteRequest,road_route
 
 router=APIRouter(prefix='/api/v2',tags=['Travel workspace'])
 bearer=HTTPBearer(auto_error=False)
@@ -33,6 +38,58 @@ def expected_version(value):
 
 @router.get('/capabilities')
 def capabilities(request:Request):return services(request).capabilities()
+
+
+def verified_city(request,city_id):
+    city=services(request).cities.resolve(city_id)
+    if city is None:raise TravelError('city_not_found','Choose a city from destination search.',404)
+    return city
+
+
+@router.get('/cities/{city_id}/hotspots',response_model=HotspotResult)
+async def hotspots(request:Request,city_id:UUID,refresh:bool=False):
+    result=await services(request).hotspots.discover(verified_city(request,city_id),refresh)
+    if services(request).repo:
+        try:await run_in_threadpool(services(request).repo.store_places,result.places)
+        except SQLAlchemyError:pass  # Public discovery does not depend on cloud availability.
+    return result
+
+
+@router.get('/cities/{city_id}/weather')
+async def weather(request:Request,city_id:UUID):
+    return await services(request).weather.forecast(verified_city(request,city_id))
+
+
+@router.post('/itineraries/generate',response_model=ItineraryPlan)
+async def itinerary(request:Request,data:ItineraryRequest):
+    city=verified_city(request,data.city_id)
+    result=await services(request).hotspots.discover(city)
+    if services(request).repo:
+        try:await run_in_threadpool(services(request).repo.store_places,result.places)
+        except SQLAlchemyError:pass
+    selected=list(result.places)
+    known={p.id for p in selected}
+    if data.fixed_order is not None:
+        for id in dict.fromkeys(id for day in data.fixed_order for id in day):
+            if id in known:continue
+            try:retained=await run_in_threadpool(services(request).resolve,id)
+            except SQLAlchemyError:retained=None
+            if retained and retained.provider in ('openstreetmap','wikipedia') and distance(city,retained)<=8100:
+                selected.append(retained);known.add(id)
+    if not request.app.state.capacity.acquire(blocking=False):
+        raise TravelError('planner_busy','Planning is busy. Please retry shortly.',503,True)
+    try:return await run_in_threadpool(generate_itinerary,data,city,selected)
+    finally:request.app.state.capacity.release()
+
+
+@router.post('/itineraries/route')
+async def route(request:Request,data:RouteRequest):
+    city=verified_city(request,data.city_id)
+    result=await services(request).hotspots.discover(city)
+    lookup={p.id:p for p in result.places}
+    if any(id not in lookup for id in data.place_ids):
+        raise TravelError('place_not_found','Refresh the city places before requesting a route.',422)
+    return await road_route(services(request).http,city,[lookup[id] for id in data.place_ids],data.mode)
 
 
 @router.get('/places/search',response_model=PlaceSearchResult)
@@ -110,7 +167,7 @@ def delete_trip(request:Request,trip_id:UUID,actor:Actor=Depends(current_actor),
 @router.get('/trips/{trip_id}/export')
 def export_trip(request:Request,trip_id:UUID,actor:Actor=Depends(current_actor)):
     trip=services(request).repository().get(actor,trip_id)
-    allowed=[item for item in trip.items if item.place.license in ('CC-BY-4.0','ODbL-1.0')]
+    allowed=[item for item in trip.items if item.place.license in ('CC-BY-4.0','ODbL-1.0','CC-BY-SA-4.0')]
     omitted=len(trip.items)-len(allowed)
     return {'kind':'payanam-trip','version':2,'trip':trip.model_copy(update={'items':allowed}),
             'attributions':sorted({item.place.attribution for item in allowed}),

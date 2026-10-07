@@ -70,3 +70,22 @@ def test_removal_then_append_keeps_distinct_contiguous_positions(repo,actors,tri
     trip=repo.revise(actors[0],trip.id,trip.version,TripChange(kind='remove_item',item_id=trip.items[0].id),str(uuid4()))
     trip=repo.revise(actors[0],trip.id,trip.version,TripChange(kind='add_item',place_id=city.id,day_index=0),str(uuid4()))
     assert [item.position for item in trip.items]==[0,1,2]
+
+
+def test_planning_envelope_roundtrip_and_private_owner(repo,actors,trip_data):
+    from app.travel.models import TripCreate,TripChange
+    from uuid import uuid4
+    planning={'city_id':str(uuid4()),'mode':'walk','pace':'balanced','interests':['heritage'],
+        'day_start':'09:00','day_end':'18:00','visits':[],
+        'expenses':[{'id':'train','label':'Train ticket','amount':450,'category':'transport'}],
+        'checklist':[{'id':'water','label':'Water bottle','done':True}], 'stale':False}
+    data=TripCreate(**trip_data.model_dump(exclude={'planning'}),planning=planning)
+    trip=repo.create(actors[0],data,str(uuid4()))
+    assert trip.planning.expenses[0].amount==450
+    assert repo.get(actors[0],trip.id).planning.checklist[0].done
+    with pytest.raises(Exception) as e:repo.get(actors[1],trip.id)
+    assert e.value.status==404
+    change=TripChange(kind='update_metadata',metadata=data.model_copy(update={'title':'Updated plan'}))
+    updated=repo.revise(actors[0],trip.id,trip.version,change,str(uuid4()))
+    assert updated.planning.mode=='walk'
+    repo.delete(actors[0],trip.id,updated.version)
