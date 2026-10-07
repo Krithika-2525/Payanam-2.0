@@ -11,7 +11,7 @@ Verified 7 October 2026. This is the complete initial planning release defined i
 | Render | Blueprint ready; deployment pending connected account | https://dashboard.render.com/select-repo?type=blueprint |
 | Supabase | Deferred at the user's request; integration design prepared | [Supabase integration](SUPABASE-INTEGRATION.md) |
 
-Frontend deployment ID: `dpl_6RNwyL9hbeCEc4Jg32J6WeSpKHP5`. API deployment ID: `dpl_EaSWp2EJbArc469WBdbi8WGhKZSc`. Source-file deployments use the reviewed planning modules and frontend source; they are not Git-triggered automatic deployments. Provider metadata reports iad1. Project preview deployments remain protected; the production URLs above are public.
+Frontend deployment ID: `dpl_EM4cNAcbq4ZxPNWLQJSYRBXRUtQZ`. Deployed UI source commit: [`f735dff4673881456713a51b66be807230520de3`](https://github.com/Krithika-2525/Payanam-2.0/commit/f735dff4673881456713a51b66be807230520de3). API deployment ID: `dpl_EaSWp2EJbArc469WBdbi8WGhKZSc`. Source-file deployments use the reviewed planning modules and frontend source; they are not Git-triggered automatic deployments. Provider metadata reports iad1. Project preview deployments remain protected; the production URLs above are public.
 
 The hosting recommendation remains **Vercel frontend + Render Python API + Supabase Auth/Postgres when supplied**. Render has no active authenticated connection in this session, so the API is temporarily on Vercel to provide a usable app now. Import `render.yaml` from this fork and select `feat/payanam-web`; set `PAYANAM_ALLOWED_ORIGINS=https://payanam-journeys.vercel.app`. Then set the frontend's `VITE_API_BASE_URL` to the new Render HTTPS origin and rebuild. Preserve the current server signing secret through secure provider settings if previously saved plans must remain eligible for replanning. Do not put that secret in frontend configuration or the repository.
 
@@ -19,9 +19,10 @@ The hosting recommendation remains **Vercel frontend + Render Python API + Supab
 
 - 21 planning-domain/API pytest tests passed after final review fixes.
 - TypeScript/Vite production build passed.
-- 6 Playwright checks passed against the local real API: create/save/reopen/delay comparison, API failure with retained form, mobile layout, invalid import, fabricated-plan import rejection, modal keyboard focus.
+- 9 Playwright checks passed against the local real API: create/save/reopen/delay comparison, API failure with retained form, mobile layout, invalid import, fabricated-plan import rejection, modal keyboard focus, homepage preference propagation, heritage preset filtering/selection, and Tamil navigation on narrow screens.
 - Public API health, catalog and plan requests returned 200 with a feasible plan.
-- Public production browser check created a plan, saved it, reloaded, reopened it, compared a delay, applied the revised plan and saved the revision. Mobile width 390px had no horizontal overflow. No browser runtime errors occurred.
+- Public production browser check verified the redesigned homepage, preference propagation, create/save/reload/reopen, export, delay comparison/apply/save revision, deletion/import/reopen and Tamil mobile layout at 390px. No browser runtime errors occurred. Locally hosted photograph bytes match the deployed files.
+- Automated axe-core WCAG A/AA checks found no violations in home, planner, itinerary, delay dialog, delay comparison and saved views after contrast fixes. English layouts checked at 360/390/768px; Tamil navigation at 360/390/651/700/768px. See [UI refresh verification](UI-REDESIGN.md).
 - Source whitespace check passed. CI workflow added for the planning service and frontend; no remote CI result is claimed yet.
 
 The original distributed prototype's baseline is separately recorded: 53 passed, 17 skipped, 4 failed and 4 errors. Failures were the Ray entrypoint assertion and three Saga cases; four Temporal end-to-end cases errored during test-server setup. The planning release has its own entrypoint and does not load those distributed services. A clean full legacy suite is not claimed.
